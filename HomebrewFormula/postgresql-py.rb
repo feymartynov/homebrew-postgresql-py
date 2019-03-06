@@ -9,6 +9,7 @@ class PostgresqlPy < Formula
   depends_on "icu4c"
   depends_on "openssl"
   depends_on "readline"
+  depends_on "python"
 
   conflicts_with "postgres-xc",
     :because => "postgresql and postgres-xc install the same binaries."
@@ -18,12 +19,10 @@ class PostgresqlPy < Formula
   def install
     # avoid adding the SDK library directory to the linker search path
     ENV["XML2_CONFIG"] = "xml2-config --exec-prefix=/usr"
+    ENV["PYTHON"] = "#{Formula["python"].opt_bin}/python"
 
-    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
-    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
-    
-    # allow specifying python version through `HOMEBREW_PYTHON=/usr/local/bin/python3 brew install postgresql-py`
-    ENV["PYTHON"] = ENV["HOMEBREW_PYTHON"]
+    ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib} -L#{Formula["python"].opt_lib}"
+    ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include} -I#{Formula["python"].opt_include}"
 
     args = %W[
       --disable-debug
