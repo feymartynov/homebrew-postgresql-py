@@ -21,6 +21,9 @@ class PostgresqlPy < Formula
 
     ENV.prepend "LDFLAGS", "-L#{Formula["openssl"].opt_lib} -L#{Formula["readline"].opt_lib}"
     ENV.prepend "CPPFLAGS", "-I#{Formula["openssl"].opt_include} -I#{Formula["readline"].opt_include}"
+    
+    # allow specifying python version through `HOMEBREW_PYTHON=/usr/local/bin/python3 brew install postgresql-py`
+    ENV["PYTHON"] = ENV["HOMEBREW_PYTHON"]
 
     args = %W[
       --disable-debug
